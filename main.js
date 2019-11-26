@@ -42,6 +42,10 @@ const options = {
   isAltPressed: false,
 };
 
+const langLS = localStorage.getItem('lang');
+options.isLangEn = langLS === 'eng';
+localStorage.setItem('lang', options.isLangEn ? 'eng' : 'ru');
+
 const body = document.querySelector('body');
 
 const textArea = document.createElement('textarea');
@@ -52,6 +56,10 @@ keyboard.classList.add('keyboard');
 
 body.appendChild(textArea);
 body.appendChild(keyboard);
+
+if (localStorage.getItem('text')) {
+  textArea.value = localStorage.getItem('text');
+}
 
 const renderButtons = () => {
   const { isLangEn, capsOn, isShiftPressed } = options;
@@ -68,6 +76,7 @@ const toggleLang = () => {
   const { isShiftPressed, isAltPressed } = options;
   if (isShiftPressed && isAltPressed) {
     options.isLangEn = !options.isLangEn;
+    localStorage.setItem('lang', options.isLangEn ? 'eng' : 'ru');
     renderButtons();
   }
 };
@@ -76,6 +85,7 @@ const fillInput = (code) => {
   switch (code) {
     case 'Backspace':
       textArea.value = textArea.value.slice(0, -1);
+      localStorage.setItem('text', textArea.value);
       return;
     case 'ArrowLeft':
       textArea.value += '◄';
@@ -118,6 +128,7 @@ const fillInput = (code) => {
     default:
       textArea.value += code;
   }
+  localStorage.setItem('text', textArea.value);
 };
 
 const onButtonClick = (event) => {
